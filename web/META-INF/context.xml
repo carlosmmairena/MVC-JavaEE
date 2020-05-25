@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Context path="/MVC-JavaEE">
+    <Resource auth      = "Container" 
+              driverClassName = "com.mysql.cj.jdbc.Driver" 
+              maxActive = "10" 
+              maxIdl    = "4" 
+              maxWait   = "10000" 
+              name      = "jdbc/Conexion" 
+              password  = "Lbrtr2m20!" 
+              type      = "javax.sql.DataSource" 
+              url       = "jdbc:mysql://localhost/Ferreteria-DVC" 
+              username  = "root">
+    </Resource>
+</Context>
