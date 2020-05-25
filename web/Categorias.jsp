@@ -24,8 +24,12 @@
 
         </c:forEach>
 
-        <h2> Base de datos con conexión </h2>
-            <c:out value="${estado}" default="nada"/>
+        <h2> Usuario que ha iniciado sesión </h2>
+        <c:forEach  items="${datosUser}" var="user">
+
+            <p> ${user} </p>
+            <p> --------------------- </p>
+        </c:forEach>
 
 
 
