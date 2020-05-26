@@ -29,8 +29,7 @@ public class CLogin extends HttpServlet {
     // Creamos una variable donde almacenamos nuestro pool de conexiones
     private DataSource pool1;
     private ConectPrep conect;
-    
-    
+
     /**
      * Método sinónimo al main(String) de las aplicaciones Java SE
      *
@@ -39,12 +38,11 @@ public class CLogin extends HttpServlet {
     @Override
     public void init() throws ServletException {
         super.init();
-        
+
         this.conect = new ConectPrep(pool1);
         this.conect.iniciarConexion();
     }
-    
-    
+
     protected void resp(HttpServletRequest solicitud, HttpServletResponse respuesta)
             throws ServletException, IOException {
 
@@ -52,17 +50,25 @@ public class CLogin extends HttpServlet {
         respuesta.setContentType("text/html;charset=UTF-8");
         RequestDispatcher dispat = null;
 
-        if (sesion(solicitud)) {
+        // Si esos datos son vacíos, entonces que solo rediriga al mismo jsp
+        if (solicitud.getParameter("cedula") == null
+                || solicitud.getParameter("contrasena") == null) {
 
-            // Utilizamos al controlador/vista para que muestre el menú
-            dispat = solicitud.getRequestDispatcher("/categorias.html");
+            dispat = solicitud.getRequestDispatcher("/Index.jsp");
+            solicitud.setAttribute("vacio", true);
 
         } else {
-            // Utilizamos el mismo jsp pero informando con un atributo el false del login
-            dispat = solicitud.getRequestDispatcher("/Index.jsp");
-            solicitud.setAttribute("sesion", false);
-        }
 
+            if (sesion(solicitud)) {
+                // Utilizamos al controlador/vista para que muestre el menú
+                dispat = solicitud.getRequestDispatcher("/categorias");
+
+            } else {
+                // Utilizamos el mismo jsp pero informando con un atributo el false del login
+                dispat = solicitud.getRequestDispatcher("/Index.jsp");
+                solicitud.setAttribute("sesion", false);
+            }
+        }
         // Reenviamos la solicitud
         dispat.forward(solicitud, respuesta);
     }
@@ -83,17 +89,25 @@ public class CLogin extends HttpServlet {
      * @return
      */
     private boolean sesion(HttpServletRequest solicitud) {
-        
-        int cedula = Integer.parseInt(encriptar(solicitud.getParameter("cedula")));
-        String contr = encriptar(solicitud.getParameter("contrasena"));
-        
-        // Enviamos la cédula y contraseña a la BD
-        Object obj[] =  ModelLogin.verificar(cedula, contr, conect.getConexion());
-        solicitud.setAttribute("datosUser", obj);
-        
-        
-        return true;
 
+        int cedula = Integer.parseInt(solicitud.getParameter("cedula"));
+        String contr = encriptar(solicitud.getParameter("contrasena"));
+
+        Object obj[] = null;
+        // Enviamos la cédula y contraseña a la BD
+        obj = ModelLogin.verificar(cedula, contr, conect.getConexion());
+
+        if (obj == null) {
+            return false;
+            
+        } else {
+            solicitud.getSession().setAttribute("datosUser", obj);
+            return true;
+        }
+        //Object obj[] = ModelLogin.verificar(cedula, contr, conect.getConexion());
+        //solicitud.setAttribute("datosUser", obj);
+        // Asignamos los datos del usuario que hizo login en la sesión del request
+        //solicitud.getSession().setAttribute("datosUser", obj);
     }
 
     /**

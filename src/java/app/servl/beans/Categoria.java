@@ -44,8 +44,8 @@ public class Categoria implements Cloneable {
         return "Categoría: <br/>"
                 + "ID: " + idCategoria
                 + "<br/> Nombre: " + nombreCateg
-                + "<br> Descripción: " + descripcionCateg
-                + " <br/>";
+                + "<br/> Descripción: " + descripcionCateg
+                + "<br/>";
     }
     
     /**

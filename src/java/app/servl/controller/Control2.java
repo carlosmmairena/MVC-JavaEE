@@ -20,7 +20,7 @@ import javax.sql.DataSource;
  * @author Carlos Mairena
  */
 //@WebServlet(name = "Control2", urlPatterns = {"/categorias.html"})
-@WebServlet("/categorias.html")
+@WebServlet("/categorias")
 public class Control2 extends HttpServlet {
 
     // Para hacer referencia al pool de conexiones creado en el archivo .xml
